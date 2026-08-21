@@ -8,13 +8,13 @@ Runtime modules are ESM-only (`"type": "module"`). Subpath exports:
 
 | Package entry | Built files |
 |---|---|
-| `react-api-contract` | `dist/contract/index.js` + `.d.ts` |
-| `react-api-contract/client` | `dist/client/index.js` + `.d.ts` |
-| `react-api-contract/react-query` | `dist/react-query/index.js` + `.d.ts` |
+| `typed-api-contract` | `dist/contract/index.js` + `.d.ts` |
+| `typed-api-contract/client` | `dist/client/index.js` + `.d.ts` |
+| `typed-api-contract/react-query` | `dist/react-query/index.js` + `.d.ts` |
 
 ---
 
-## `react-api-contract`
+## `typed-api-contract`
 
 ### Values
 
@@ -56,7 +56,7 @@ HTTP_METHOD: {
 
 ---
 
-## `react-api-contract/client`
+## `typed-api-contract/client`
 
 ### Values
 
@@ -91,7 +91,7 @@ class UnexpectedStatusError extends Error {
 
 ---
 
-## `react-api-contract/react-query`
+## `typed-api-contract/react-query`
 
 The entry file must retain the `"use client"` directive for Next.js App Router.
 

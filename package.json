@@ -1,5 +1,5 @@
 {
-  "name": "react-api-contract",
+  "name": "typed-api-contract",
   "version": "0.1.0",
   "description": "Typed REST contracts, fetch client, and TanStack Query hooks inferred from Zod route definitions.",
   "license": "MIT",
@@ -54,13 +54,28 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "type-check": "tsc --noEmit -p tsconfig.json"
+    "prepublish-only": "pnpm test && pnpm test:types && pnpm build",
+    "type-check": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run",
+    "test:unit": "vitest run tests/unit",
+    "test:integration": "vitest run tests/integration",
+    "test:types": "vitest --typecheck.only",
+    "test:inference-budget": "node scripts/check-inference-budget.mjs",
+    "pack:dry-run": "pnpm pack --dry-run"
   },
   "devDependencies": {
     "@tanstack/react-query": "^5.101.4",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/node": "^20",
     "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "jsdom": "^30.0.1",
+    "msw": "^2.15.0",
     "react": "^19.2.8",
+    "react-dom": "^19.2.8",
     "typescript": "^5",
+    "vitest": "^4.1.10",
     "zod": "^4.4.3"
   },
   "packageManager": "pnpm@10.33.4"

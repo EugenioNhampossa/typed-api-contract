@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "jsx": "react-jsx",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "verbatimModuleSyntax": false,
+    "types": ["node", "vitest/globals"],
+    "paths": {
+      "typed-api-contract": ["./src/contract/index.ts"],
+      "typed-api-contract/client": ["./src/client/index.ts"],
+      "typed-api-contract/react-query": ["./src/react-query/index.ts"]
+    }
+  },
+  "include": ["src", "tests", "vitest.config.ts"]
+}
