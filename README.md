@@ -2,8 +2,6 @@
 
 Typed REST contracts, a `fetch` client, and TanStack Query hooks inferred from Zod route definitions.
 
-> The **public API is frozen**. See [`docs/PUBLIC_API.md`](docs/PUBLIC_API.md). Publishing steps are in [`docs/PUBLISH.md`](docs/PUBLISH.md).
-
 ## Install
 
 ```bash
@@ -16,11 +14,15 @@ Peer dependencies: `zod` `^4`. `react` and `@tanstack/react-query` `^5` are opti
 
 ## Entries
 
-| Import | Purpose |
-|---|---|
-| `typed-api-contract` | Define routes with `initContract` |
-| `typed-api-contract/client` | Typed `fetch` client from a contract |
+
+| Import                           | Purpose                                                |
+| -------------------------------- | ------------------------------------------------------ |
+| `typed-api-contract`             | Define routes with `initContract`                      |
+| `typed-api-contract/client`      | Typed `fetch` client from a contract                   |
 | `typed-api-contract/react-query` | `useQuery` / `useMutation` tree from the same contract |
+
+
+
 
 ## Usage
 
@@ -52,6 +54,8 @@ Next.js App Router: `typed-api-contract/react-query` ships with `"use client"` s
 - Request `params` / `query` / `body` are typed, not parsed at runtime. Responses are Zod-parsed.
 - Declared HTTP statuses (including 4xx) are data. Undeclared statuses throw `UnexpectedStatusError`.
 - GET → query hook; POST / PUT / PATCH / DELETE → mutation hook.
+
+
 
 ## License
 
