@@ -1,6 +1,6 @@
 {
   "name": "typed-api-contract",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Typed REST contracts, fetch client, and TanStack Query hooks inferred from Zod route definitions.",
   "license": "MIT",
   "keywords": [
