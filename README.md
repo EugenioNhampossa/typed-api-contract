@@ -2,7 +2,7 @@
 
 Typed REST contracts, a `fetch` client, and TanStack Query hooks inferred from Zod route definitions.
 
-> The **public API is frozen**. See [`docs/PUBLIC_API.md`](docs/PUBLIC_API.md). First npm publish is Phase 2.
+> The **public API is frozen**. See [`docs/PUBLIC_API.md`](docs/PUBLIC_API.md). Publishing steps are in [`docs/PUBLISH.md`](docs/PUBLISH.md).
 
 ## Install
 

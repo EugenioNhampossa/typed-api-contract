@@ -61,7 +61,8 @@
     "test:integration": "vitest run tests/integration",
     "test:types": "vitest --typecheck.only",
     "test:inference-budget": "node scripts/check-inference-budget.mjs",
-    "pack:dry-run": "pnpm pack --dry-run"
+    "pack:dry-run": "pnpm pack --dry-run",
+    "pack:check": "node scripts/check-pack-contents.mjs"
   },
   "devDependencies": {
     "@tanstack/react-query": "^5.101.4",
