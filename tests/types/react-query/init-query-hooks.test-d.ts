@@ -17,6 +17,12 @@ test("GET hook requires params and accepts query options", () => {
     { enabled: true, staleTime: 1000, retry: false },
   )
 
+  hooks.posts.getById({
+    params: { id: "1" },
+    headers: { Authorization: "Bearer x" },
+    signal: new AbortController().signal,
+  })
+
   // @ts-expect-error params is required
   hooks.posts.getById({})
 })

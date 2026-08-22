@@ -53,6 +53,21 @@ describe("buildQueryKey", () => {
     ).toEqual(["posts", "list", QUERY_KEY_EMPTY_PART, { page: 1 }])
   })
 
+  it("ignores headers and signal when building the key", () => {
+    const withoutTransport = buildQueryKey(["posts", "getById"], {
+      params: { id: "1" },
+    })
+    const transportArgs = {
+      params: { id: "1" },
+      headers: { Authorization: "Bearer x" },
+      signal: new AbortController().signal,
+    }
+
+    expect(buildQueryKey(["posts", "getById"], transportArgs)).toEqual(
+      withoutTransport,
+    )
+  })
+
   it("keeps an empty route path usable as a key", () => {
     expect(buildQueryKey([])).toEqual([
       QUERY_KEY_EMPTY_PART,
