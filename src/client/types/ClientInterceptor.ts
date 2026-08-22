@@ -23,8 +23,11 @@ export interface ClientInterceptor {
     response: ClientResponse,
   ): ClientResponse | Promise<ClientResponse>
   /**
-   * Observe a failure and rethrow. Returning a response to recover is not
-   * supported yet; the original error is thrown after the chain finishes.
+   * Observe a failure, rethrow, or return a `ClientResponse` to recover.
+   * A returned response is Zod-parsed once and is not sent through `onError` again.
    */
-  onError?(request: ClientRequest, error: unknown): void | Promise<void>
+  onError?(
+    request: ClientRequest,
+    error: unknown,
+  ): void | ClientResponse | Promise<void | ClientResponse>
 }

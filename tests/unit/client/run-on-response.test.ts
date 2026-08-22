@@ -1,21 +1,7 @@
 import { describe, expect, it } from "vitest"
 import { runOnResponse } from "../../../src/client/runOnResponse"
-import type { ClientResponse } from "../../../src/client/types/ClientInterceptor"
 import { createExampleRequest } from "../../fixtures/client/create-example-request"
-
-function createExampleResponse(
-  overrides: Partial<ClientResponse> = {},
-): ClientResponse {
-  const raw = new Response("{}", { status: 200 })
-
-  return {
-    status: 200,
-    body: {},
-    headers: raw.headers,
-    raw,
-    ...overrides,
-  }
-}
+import { createExampleResponse } from "../../fixtures/client/create-example-response"
 
 describe("runOnResponse", () => {
   it("returns the response unchanged when there are no interceptors", async () => {

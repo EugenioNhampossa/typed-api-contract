@@ -11,4 +11,6 @@ export interface InitClientOptions {
   fetch?: typeof fetch
   credentials?: RequestCredentials
   interceptors?: readonly ClientInterceptor[]
+  signal?: AbortSignal
+  validateRequest?: boolean
 }

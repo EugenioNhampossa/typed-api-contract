@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest"
-import { z } from "zod"
+import { z, ZodError } from "zod"
 import { HTTP_METHOD } from "typed-api-contract"
 import { callRoute } from "../../../src/client/callRoute"
 import type { ClientConfig } from "../../../src/client/types/ClientConfig"
@@ -25,6 +25,7 @@ describe("callRoute", () => {
       baseUrl: "https://api.example.com",
       fetch,
       interceptors: [],
+      validateRequest: false,
     }
 
     const result = await callRoute({
@@ -53,6 +54,7 @@ describe("callRoute", () => {
         fetch,
         credentials: "include",
         interceptors: [],
+        validateRequest: false,
       },
       route: getByIdRoute,
       args: { params: { id: "1" }, signal },
@@ -62,5 +64,48 @@ describe("callRoute", () => {
       signal,
       credentials: "include",
     })
+  })
+
+  it("forwards the client-level signal when no per-call signal is set", async () => {
+    const signal = new AbortController().signal
+    const fetch = vi.fn<typeof globalThis.fetch>().mockResolvedValue(
+      new Response(JSON.stringify({ id: "1" }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }),
+    )
+
+    await callRoute({
+      config: {
+        baseUrl: "https://api.example.com",
+        fetch,
+        interceptors: [],
+        validateRequest: false,
+        signal,
+      },
+      route: getByIdRoute,
+      args: { params: { id: "1" } },
+    })
+
+    expect(fetch.mock.calls[0]?.[1]?.signal).toBe(signal)
+  })
+
+  it("does not call fetch when validateRequest fails", async () => {
+    const fetch = vi.fn<typeof globalThis.fetch>()
+
+    await expect(
+      callRoute({
+        config: {
+          baseUrl: "https://api.example.com",
+          fetch,
+          interceptors: [],
+          validateRequest: true,
+        },
+        route: getByIdRoute,
+        args: { params: { id: 1 } } as never,
+      }),
+    ).rejects.toThrow(ZodError)
+
+    expect(fetch).not.toHaveBeenCalled()
   })
 })

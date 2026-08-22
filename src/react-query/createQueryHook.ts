@@ -4,10 +4,10 @@ import {
   type UseQueryResult,
 } from "@tanstack/react-query"
 import type { ClientCallArgs } from "../client/index.js"
+import { combineAbortSignals } from "../client/combineAbortSignals.js"
 import type { AppRoute, InferResponses } from "../contract/index.js"
 import { buildQueryKey } from "./buildQueryKey.js"
 import { callClientRoute } from "./callClientRoute.js"
-import { combineAbortSignals } from "./combineAbortSignals.js"
 
 export function createQueryHook<R extends AppRoute>(
   client: unknown,

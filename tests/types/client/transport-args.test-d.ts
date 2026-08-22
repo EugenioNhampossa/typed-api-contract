@@ -15,6 +15,8 @@ test("InitClientOptions requires baseUrl", () => {
     fetch?: typeof fetch
     credentials?: RequestCredentials
     interceptors?: readonly ClientInterceptor[]
+    signal?: AbortSignal
+    validateRequest?: boolean
   }>()
 
   const options: InitClientOptions = { baseUrl: POSTS_API_BASE_URL }
@@ -75,11 +77,28 @@ test("InitClientOptions accepts interceptors", () => {
     },
   }
 
+  const recovering: ClientInterceptor = {
+    onError(_request, error) {
+      void error
+      return {
+        status: 200,
+        body: {},
+        headers: new Headers(),
+        raw: new Response(),
+      }
+    },
+  }
+  void recovering
+
   const options: InitClientOptions = {
     baseUrl: POSTS_API_BASE_URL,
     interceptors: [interceptor],
+    signal: new AbortController().signal,
+    validateRequest: true,
   }
   expectTypeOf(options.interceptors).toEqualTypeOf<
     readonly ClientInterceptor[] | undefined
   >()
+  expectTypeOf(options.signal).toEqualTypeOf<AbortSignal | undefined>()
+  expectTypeOf(options.validateRequest).toEqualTypeOf<boolean | undefined>()
 })

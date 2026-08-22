@@ -14,5 +14,7 @@ export function normalizeClientConfig(options: InitClientOptions): ClientConfig 
     headers: options.headers,
     credentials: options.credentials,
     interceptors: options.interceptors ?? [],
+    signal: options.signal,
+    validateRequest: options.validateRequest ?? false,
   }
 }

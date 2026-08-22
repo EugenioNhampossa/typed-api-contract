@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { combineAbortSignals } from "../../../src/react-query/combineAbortSignals"
+import { combineAbortSignals } from "../../../src/client/combineAbortSignals"
 
 describe("combineAbortSignals", () => {
   it("returns undefined when both inputs are missing", () => {

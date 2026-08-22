@@ -1,24 +1,30 @@
 import type {
   ClientInterceptor,
   ClientRequest,
+  ClientResponse,
 } from "./types/ClientInterceptor.js"
+import { isClientResponse } from "./isClientResponse.js"
 
 /**
- * Runs `onError` hooks in array order, then rethrows the original error.
+ * Runs `onError` hooks in array order.
  *
- * A hook that throws stops the chain. Returned values are ignored.
+ * A hook that returns a `ClientResponse` recovers and stops the chain.
+ * A hook that throws stops the chain. Otherwise the original error is rethrown.
  */
 export async function runOnError(
   interceptors: readonly ClientInterceptor[],
   request: ClientRequest,
   error: unknown,
-): Promise<never> {
+): Promise<ClientResponse> {
   for (const interceptor of interceptors) {
     if (interceptor.onError === undefined) {
       continue
     }
 
-    await interceptor.onError(request, error)
+    const result = await interceptor.onError(request, error)
+    if (isClientResponse(result)) {
+      return result
+    }
   }
 
   throw error

@@ -12,4 +12,6 @@ export interface ClientConfig {
   readonly headers?: InitClientOptions["headers"]
   readonly credentials?: RequestCredentials
   readonly interceptors: readonly ClientInterceptor[]
+  readonly signal?: AbortSignal
+  readonly validateRequest: boolean
 }

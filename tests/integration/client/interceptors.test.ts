@@ -1,5 +1,6 @@
 import { http, HttpResponse } from "msw"
 import { describe, expect, it, vi } from "vitest"
+import { ZodError } from "zod"
 import {
   initClient,
   UnexpectedStatusError,
@@ -170,5 +171,55 @@ describe("initClient interceptors", () => {
     if (res.status === 200) {
       expect(res.body.title).toBe("Hello")
     }
+  })
+
+  it("lets onError recover with a ClientResponse", async () => {
+    const recovered = {
+      status: 200,
+      body: { id: "1", title: "Recovered", body: "Post" },
+      headers: new Headers({ "Content-Type": "application/json" }),
+      raw: new Response(),
+    }
+    const client = initClient(contract, {
+      baseUrl: POSTS_API_BASE_URL,
+      fetch: async () => {
+        throw new TypeError("network")
+      },
+      interceptors: [
+        {
+          onError() {
+            return recovered
+          },
+        },
+      ],
+    })
+
+    const res = await client.posts.getById({ params: { id: "1" } })
+
+    expect(res.status).toBe(200)
+    if (res.status === 200) {
+      expect(res.body.title).toBe("Recovered")
+    }
+  })
+
+  it("does not run onError again when a recovered response fails validation", async () => {
+    const onError = vi.fn(() => ({
+      status: 200,
+      body: { id: 1 },
+      headers: new Headers(),
+      raw: new Response(),
+    }))
+    const client = initClient(contract, {
+      baseUrl: POSTS_API_BASE_URL,
+      fetch: async () => {
+        throw new TypeError("network")
+      },
+      interceptors: [{ onError }],
+    })
+
+    await expect(
+      client.posts.getById({ params: { id: "1" } }),
+    ).rejects.toBeInstanceOf(ZodError)
+    expect(onError).toHaveBeenCalledOnce()
   })
 })

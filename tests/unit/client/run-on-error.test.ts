@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest"
 import { runOnError } from "../../../src/client/runOnError"
 import { createExampleRequest } from "../../fixtures/client/create-example-request"
+import { createExampleResponse } from "../../fixtures/client/create-example-response"
 
 describe("runOnError", () => {
   it("rethrows the original error when there are no interceptors", async () => {
@@ -58,5 +59,51 @@ describe("runOnError", () => {
     ).rejects.toBe(replacement)
 
     expect(second).not.toHaveBeenCalled()
+  })
+
+  it("returns a ClientResponse from onError and skips later hooks", async () => {
+    const recovered = createExampleResponse({
+      body: { id: "1" },
+    })
+    const second = vi.fn()
+
+    const result = await runOnError(
+      [
+        {
+          onError() {
+            return recovered
+          },
+        },
+        { onError: second },
+      ],
+      createExampleRequest(),
+      new Error("network"),
+    )
+
+    expect(result).toBe(recovered)
+    expect(second).not.toHaveBeenCalled()
+  })
+
+  it("lets a later hook recover when earlier hooks return void", async () => {
+    const recovered = createExampleResponse()
+
+    const result = await runOnError(
+      [
+        {
+          onError() {
+            return undefined
+          },
+        },
+        {
+          onError() {
+            return recovered
+          },
+        },
+      ],
+      createExampleRequest(),
+      new Error("network"),
+    )
+
+    expect(result).toBe(recovered)
   })
 })

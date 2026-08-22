@@ -118,6 +118,30 @@ describe("initClient options", () => {
     ).rejects.toMatchObject({ name: "AbortError" })
   })
 
+  it("rejects when the client-level signal is already aborted", async () => {
+    const controller = new AbortController()
+    controller.abort()
+    const client = initClient(contract, {
+      baseUrl: POSTS_API_BASE_URL,
+      signal: controller.signal,
+    })
+
+    await expect(
+      client.posts.getById({ params: { id: "1" } }),
+    ).rejects.toMatchObject({ name: "AbortError" })
+  })
+
+  it("parses request args when validateRequest is true", async () => {
+    const client = initClient(contract, {
+      baseUrl: POSTS_API_BASE_URL,
+      validateRequest: true,
+    })
+
+    const res = await client.posts.getById({ params: { id: "1" } })
+
+    expect(res.status).toBe(200)
+  })
+
   it("forwards credentials to fetch", async () => {
     const fetch = vi.fn<typeof globalThis.fetch>(globalThis.fetch)
     const client = initClient(contract, {

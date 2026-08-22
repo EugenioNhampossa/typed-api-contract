@@ -13,6 +13,8 @@ import type { InitClientOptions } from "./types/InitClientOptions.js"
  * @param options.fetch - Custom fetch implementation. Defaults to `globalThis.fetch`.
  * @param options.credentials - Forwarded to `fetch` as `RequestInit.credentials`.
  * @param options.interceptors - `onRequest` / `onResponse` / `onError` hooks around each call.
+ * @param options.signal - Aborts every request; combined with per-call `signal` when both are set.
+ * @param options.validateRequest - When true, Zod-parses `params` / `query` / `body` before fetch.
  */
 export function initClient<T extends AppRouter>(
   contract: T,
