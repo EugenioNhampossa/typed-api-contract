@@ -14,6 +14,7 @@ const REQUIRED_PATHS = [
   "package.json",
   "LICENSE",
   "README.md",
+  "CHANGELOG.md",
   "dist/contract/index.js",
   "dist/contract/index.d.ts",
   "dist/client/index.js",
