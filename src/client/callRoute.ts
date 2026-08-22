@@ -8,12 +8,17 @@ import {
 import { UnexpectedStatusError } from "./errors/UnexpectedStatusError.js"
 import { getRecordValue } from "./getRecordValue.js"
 import { isZodSchema } from "./isZodSchema.js"
+import { mapFetchResponse } from "./mapFetchResponse.js"
 import { mergeHeaders } from "./mergeHeaders.js"
-import { parseResponseJson } from "./parseResponseJson.js"
 import { resolveClientHeaders } from "./resolveClientHeaders.js"
+import { runOnError } from "./runOnError.js"
+import { runOnRequest } from "./runOnRequest.js"
+import { runOnResponse } from "./runOnResponse.js"
 import { serializeQuery } from "./serializeQuery.js"
+import { toFetchInit } from "./toFetchInit.js"
 import type { ClientCallArgs } from "./types/ClientCallArgs.js"
 import type { ClientConfig } from "./types/ClientConfig.js"
+import type { ClientRequest } from "./types/ClientInterceptor.js"
 
 interface CallRouteParams<R extends AppRoute> {
   config: ClientConfig
@@ -36,26 +41,42 @@ export async function callRoute<R extends AppRoute>({
     await resolveClientHeaders(config.headers),
     args.headers,
   ])
-
-  const response = await config.fetch(url, {
+  const request: ClientRequest = {
+    url,
     method: route.method,
     headers,
     body: hasJsonBody ? JSON.stringify(body) : undefined,
     signal: args.signal,
-    credentials: config.credentials,
-  })
-
-  const schema: unknown = route.responses[response.status]
-  if (!isZodSchema(schema)) {
-    throw new UnexpectedStatusError({
-      method: route.method,
-      path: route.path,
-      status: response.status,
-    })
+    route,
   }
+  const interceptedRequest = await runOnRequest(config.interceptors, request)
 
-  const json = await parseResponseJson(response)
-  const parsedBody = schema.parse(json)
+  try {
+    const fetchResponse = await config.fetch(
+      interceptedRequest.url,
+      toFetchInit(interceptedRequest, config.credentials),
+    )
+    const mappedResponse = await mapFetchResponse(fetchResponse)
+    const interceptedResponse = await runOnResponse(
+      config.interceptors,
+      interceptedRequest,
+      mappedResponse,
+    )
+    const schema: unknown = route.responses[interceptedResponse.status]
+    if (!isZodSchema(schema)) {
+      throw new UnexpectedStatusError({
+        method: route.method,
+        path: route.path,
+        status: interceptedResponse.status,
+      })
+    }
 
-  return { status: response.status, body: parsedBody } as InferResponses<R>
+    const parsedBody = schema.parse(interceptedResponse.body)
+    return {
+      status: interceptedResponse.status,
+      body: parsedBody,
+    } as InferResponses<R>
+  } catch (error) {
+    return runOnError(config.interceptors, interceptedRequest, error)
+  }
 }

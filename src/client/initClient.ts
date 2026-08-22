@@ -12,6 +12,7 @@ import type { InitClientOptions } from "./types/InitClientOptions.js"
  * @param options.headers - Static headers or a thunk resolved on every request.
  * @param options.fetch - Custom fetch implementation. Defaults to `globalThis.fetch`.
  * @param options.credentials - Forwarded to `fetch` as `RequestInit.credentials`.
+ * @param options.interceptors - `onRequest` / `onResponse` / `onError` hooks around each call.
  */
 export function initClient<T extends AppRouter>(
   contract: T,

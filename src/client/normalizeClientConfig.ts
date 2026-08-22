@@ -13,5 +13,6 @@ export function normalizeClientConfig(options: InitClientOptions): ClientConfig 
     fetch: options.fetch ?? ((input, init) => globalThis.fetch(input, init)),
     headers: options.headers,
     credentials: options.credentials,
+    interceptors: options.interceptors ?? [],
   }
 }

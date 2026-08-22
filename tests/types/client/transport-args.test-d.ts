@@ -2,6 +2,7 @@ import { expectTypeOf, test } from "vitest"
 import {
   initClient,
   type ClientCallArgs,
+  type ClientInterceptor,
   type InitClientOptions,
 } from "typed-api-contract/client"
 import { contract } from "../../fixtures/contracts/example.contract"
@@ -13,6 +14,7 @@ test("InitClientOptions requires baseUrl", () => {
     headers?: HeadersInit | (() => HeadersInit | Promise<HeadersInit>)
     fetch?: typeof fetch
     credentials?: RequestCredentials
+    interceptors?: readonly ClientInterceptor[]
   }>()
 
   const options: InitClientOptions = { baseUrl: POSTS_API_BASE_URL }
@@ -58,4 +60,26 @@ test("ClientCallArgs keeps contract fields and adds transport fields", () => {
     headers?: HeadersInit
     signal?: AbortSignal
   }>()
+})
+
+test("InitClientOptions accepts interceptors", () => {
+  const interceptor: ClientInterceptor = {
+    onRequest(request) {
+      return request
+    },
+    onResponse(_request, response) {
+      return response
+    },
+    onError(_request, error) {
+      throw error
+    },
+  }
+
+  const options: InitClientOptions = {
+    baseUrl: POSTS_API_BASE_URL,
+    interceptors: [interceptor],
+  }
+  expectTypeOf(options.interceptors).toEqualTypeOf<
+    readonly ClientInterceptor[] | undefined
+  >()
 })

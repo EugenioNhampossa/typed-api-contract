@@ -1,3 +1,5 @@
+import type { ClientInterceptor } from "./ClientInterceptor.js"
+
 /**
  * Options passed to `initClient`.
  *
@@ -8,4 +10,5 @@ export interface InitClientOptions {
   headers?: HeadersInit | (() => HeadersInit | Promise<HeadersInit>)
   fetch?: typeof fetch
   credentials?: RequestCredentials
+  interceptors?: readonly ClientInterceptor[]
 }

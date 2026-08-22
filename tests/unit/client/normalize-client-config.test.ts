@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest"
 import { normalizeClientConfig } from "../../../src/client/normalizeClientConfig"
+import type { ClientInterceptor } from "../../../src/client/types/ClientInterceptor"
 
 describe("normalizeClientConfig", () => {
   it("copies baseUrl onto the config", () => {
@@ -57,5 +58,29 @@ describe("normalizeClientConfig", () => {
 
     expect(config.headers).toBe(headers)
     expect(config.credentials).toBe("include")
+  })
+
+  it("defaults interceptors to an empty list", () => {
+    const config = normalizeClientConfig({
+      baseUrl: "https://api.example.com",
+    })
+
+    expect(config.interceptors).toEqual([])
+  })
+
+  it("copies interceptors onto the config", () => {
+    const interceptors: ClientInterceptor[] = [
+      {
+        onRequest(request) {
+          return request
+        },
+      },
+    ]
+    const config = normalizeClientConfig({
+      baseUrl: "https://api.example.com",
+      interceptors,
+    })
+
+    expect(config.interceptors).toBe(interceptors)
   })
 })

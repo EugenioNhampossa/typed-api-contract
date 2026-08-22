@@ -24,6 +24,7 @@ describe("callRoute", () => {
     const config: ClientConfig = {
       baseUrl: "https://api.example.com",
       fetch,
+      interceptors: [],
     }
 
     const result = await callRoute({
@@ -51,6 +52,7 @@ describe("callRoute", () => {
         baseUrl: "https://api.example.com",
         fetch,
         credentials: "include",
+        interceptors: [],
       },
       route: getByIdRoute,
       args: { params: { id: "1" }, signal },

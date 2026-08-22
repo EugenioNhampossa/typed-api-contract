@@ -1,3 +1,4 @@
+import type { ClientInterceptor } from "./ClientInterceptor.js"
 import type { InitClientOptions } from "./InitClientOptions.js"
 
 /**
@@ -10,4 +11,5 @@ export interface ClientConfig {
   readonly fetch: typeof fetch
   readonly headers?: InitClientOptions["headers"]
   readonly credentials?: RequestCredentials
+  readonly interceptors: readonly ClientInterceptor[]
 }
