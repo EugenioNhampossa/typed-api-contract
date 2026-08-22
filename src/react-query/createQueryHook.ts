@@ -3,15 +3,17 @@ import {
   type UseQueryOptions,
   type UseQueryResult,
 } from "@tanstack/react-query"
-import type { AppRoute, InferClientArgs, InferResponses } from "../contract/index.js"
+import type { ClientCallArgs } from "../client/index.js"
+import type { AppRoute, InferResponses } from "../contract/index.js"
 import { buildQueryKey } from "./buildQueryKey.js"
 import { callClientRoute } from "./callClientRoute.js"
+import { combineAbortSignals } from "./combineAbortSignals.js"
 
 export function createQueryHook<R extends AppRoute>(
   client: unknown,
   routePath: readonly string[],
 ): <TData = InferResponses<R>>(
-  args: InferClientArgs<R>,
+  args: ClientCallArgs<R>,
   options?: Omit<
     UseQueryOptions<InferResponses<R>, Error, TData>,
     "queryKey" | "queryFn"
@@ -21,8 +23,11 @@ export function createQueryHook<R extends AppRoute>(
     return useQuery({
       ...options,
       queryKey: buildQueryKey(routePath, args),
-      queryFn: () =>
-        callClientRoute(client, routePath, args) as Promise<InferResponses<R>>,
+      queryFn: ({ signal }) =>
+        callClientRoute(client, routePath, {
+          ...args,
+          signal: combineAbortSignals(args.signal, signal),
+        }) as Promise<InferResponses<R>>,
     })
   }
 }

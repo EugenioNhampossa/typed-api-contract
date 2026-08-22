@@ -1,4 +1,4 @@
-import type { AppRoute, InferClientArgs, InferResponses } from "../contract/index.js"
+import type { AppRoute, InferResponses } from "../contract/index.js"
 import { buildPath } from "./buildPath.js"
 import {
   CONTENT_TYPE_JSON,
@@ -8,32 +8,41 @@ import {
 import { UnexpectedStatusError } from "./errors/UnexpectedStatusError.js"
 import { getRecordValue } from "./getRecordValue.js"
 import { isZodSchema } from "./isZodSchema.js"
+import { mergeHeaders } from "./mergeHeaders.js"
 import { parseResponseJson } from "./parseResponseJson.js"
+import { resolveClientHeaders } from "./resolveClientHeaders.js"
 import { serializeQuery } from "./serializeQuery.js"
+import type { ClientCallArgs } from "./types/ClientCallArgs.js"
+import type { ClientConfig } from "./types/ClientConfig.js"
 
 interface CallRouteParams<R extends AppRoute> {
-  baseUrl: string
+  config: ClientConfig
   route: R
-  args: InferClientArgs<R>
+  args: ClientCallArgs<R>
 }
 
 export async function callRoute<R extends AppRoute>({
-  baseUrl,
+  config,
   route,
   args,
 }: CallRouteParams<R>): Promise<InferResponses<R>> {
   const path = buildPath(route.path, getRecordValue(args, "params"))
   const queryString = serializeQuery(getRecordValue(args, "query"))
   const body = getRecordValue(args, "body")
-  const url = `${baseUrl}${path}${queryString}`
+  const url = `${config.baseUrl}${path}${queryString}`
   const hasJsonBody = JSON_BODY_METHODS.has(route.method) && body !== undefined
+  const headers = mergeHeaders([
+    hasJsonBody ? { [HEADER_CONTENT_TYPE]: CONTENT_TYPE_JSON } : undefined,
+    await resolveClientHeaders(config.headers),
+    args.headers,
+  ])
 
-  const response = await fetch(url, {
+  const response = await config.fetch(url, {
     method: route.method,
-    headers: hasJsonBody
-      ? { [HEADER_CONTENT_TYPE]: CONTENT_TYPE_JSON }
-      : undefined,
+    headers,
     body: hasJsonBody ? JSON.stringify(body) : undefined,
+    signal: args.signal,
+    credentials: config.credentials,
   })
 
   const schema: unknown = route.responses[response.status]

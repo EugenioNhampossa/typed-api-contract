@@ -3,7 +3,8 @@ import {
   type UseMutationOptions,
   type UseMutationResult,
 } from "@tanstack/react-query"
-import type { AppRoute, InferClientArgs, InferResponses } from "../contract/index.js"
+import type { ClientCallArgs } from "../client/index.js"
+import type { AppRoute, InferResponses } from "../contract/index.js"
 import { callClientRoute } from "./callClientRoute.js"
 
 export function createMutationHook<R extends AppRoute>(
@@ -11,14 +12,14 @@ export function createMutationHook<R extends AppRoute>(
   routePath: readonly string[],
 ): (
   options?: Omit<
-    UseMutationOptions<InferResponses<R>, Error, InferClientArgs<R>>,
+    UseMutationOptions<InferResponses<R>, Error, ClientCallArgs<R>>,
     "mutationFn"
   >,
-) => UseMutationResult<InferResponses<R>, Error, InferClientArgs<R>> {
+) => UseMutationResult<InferResponses<R>, Error, ClientCallArgs<R>> {
   return function useContractMutation(options) {
     return useMutation({
       ...options,
-      mutationFn: (args: InferClientArgs<R>) =>
+      mutationFn: (args: ClientCallArgs<R>) =>
         callClientRoute(client, routePath, args) as Promise<InferResponses<R>>,
     })
   }

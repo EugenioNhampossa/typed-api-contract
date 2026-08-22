@@ -1,20 +1,22 @@
 import type { AppRouter } from "../contract/index.js"
 import { createClientTree } from "./createClientTree.js"
+import { normalizeClientConfig } from "./normalizeClientConfig.js"
 import type { InferClient } from "./types/InferClient.js"
-
-interface InitClientOptions {
-  baseUrl: string
-}
+import type { InitClientOptions } from "./types/InitClientOptions.js"
 
 /**
  * Builds a typed `fetch` client tree that mirrors `contract`.
  *
  * @param contract - Nested router created with `initContract().router(...)`.
  * @param options.baseUrl - API origin with no trailing slash, e.g. `https://api.example.com`.
+ * @param options.headers - Static headers or a thunk resolved on every request.
+ * @param options.fetch - Custom fetch implementation. Defaults to `globalThis.fetch`.
+ * @param options.credentials - Forwarded to `fetch` as `RequestInit.credentials`.
  */
 export function initClient<T extends AppRouter>(
   contract: T,
   options: InitClientOptions,
 ): InferClient<T> {
-  return createClientTree(contract, options.baseUrl) as InferClient<T>
+  const config = normalizeClientConfig(options)
+  return createClientTree(contract, config) as InferClient<T>
 }

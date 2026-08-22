@@ -4,16 +4,16 @@ import type {
   UseQueryOptions,
   UseQueryResult,
 } from "@tanstack/react-query"
+import type { ClientCallArgs } from "../../client/index.js"
 import type {
   AppRoute,
   AppRouter,
   GetHttpMethod,
-  InferClientArgs,
   InferResponses,
 } from "../../contract/index.js"
 
 type QueryHook<R extends AppRoute> = <TData = InferResponses<R>>(
-  args: InferClientArgs<R>,
+  args: ClientCallArgs<R>,
   options?: Omit<
     UseQueryOptions<InferResponses<R>, Error, TData>,
     "queryKey" | "queryFn"
@@ -22,10 +22,10 @@ type QueryHook<R extends AppRoute> = <TData = InferResponses<R>>(
 
 type MutationHook<R extends AppRoute> = (
   options?: Omit<
-    UseMutationOptions<InferResponses<R>, Error, InferClientArgs<R>>,
+    UseMutationOptions<InferResponses<R>, Error, ClientCallArgs<R>>,
     "mutationFn"
   >,
-) => UseMutationResult<InferResponses<R>, Error, InferClientArgs<R>>
+) => UseMutationResult<InferResponses<R>, Error, ClientCallArgs<R>>
 
 export type InferQueryHooks<T extends AppRouter> = {
   [K in keyof T]: T[K] extends AppRoute

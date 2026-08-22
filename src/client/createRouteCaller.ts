@@ -1,9 +1,11 @@
-import type { AppRoute, InferClientArgs, InferResponses } from "../contract/index.js"
+import type { AppRoute, InferResponses } from "../contract/index.js"
 import { callRoute } from "./callRoute.js"
+import type { ClientCallArgs } from "./types/ClientCallArgs.js"
+import type { ClientConfig } from "./types/ClientConfig.js"
 
 export function createRouteCaller(
-  baseUrl: string,
+  config: ClientConfig,
   route: AppRoute,
-): (args: InferClientArgs<AppRoute>) => Promise<InferResponses<AppRoute>> {
-  return (args: InferClientArgs<AppRoute>) => callRoute({ baseUrl, route, args })
+): (args: ClientCallArgs<AppRoute>) => Promise<InferResponses<AppRoute>> {
+  return (args: ClientCallArgs<AppRoute>) => callRoute({ config, route, args })
 }
