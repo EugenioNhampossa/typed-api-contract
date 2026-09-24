@@ -44,4 +44,36 @@ describe("parseRouteResponse", () => {
       ),
     ).toThrow(ZodError)
   })
+
+  it("accepts an empty body when the schema is z.undefined()", () => {
+    const route = {
+      method: HTTP_METHOD.DELETE,
+      path: "/posts/:id",
+      pathParams: z.object({ id: z.string() }),
+      responses: { 204: z.undefined() },
+    }
+
+    const result = parseRouteResponse(
+      route,
+      createExampleResponse({ status: 204, body: undefined }),
+    )
+
+    expect(result).toEqual({ status: 204, body: undefined })
+  })
+
+  it("accepts an empty body when the schema is z.void()", () => {
+    const route = {
+      method: HTTP_METHOD.DELETE,
+      path: "/posts/:id",
+      pathParams: z.object({ id: z.string() }),
+      responses: { 204: z.void() },
+    }
+
+    const result = parseRouteResponse(
+      route,
+      createExampleResponse({ status: 204, body: undefined }),
+    )
+
+    expect(result.status).toBe(204)
+  })
 })

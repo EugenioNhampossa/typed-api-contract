@@ -1,4 +1,6 @@
 import type {
+  InfiniteData,
+  UseInfiniteQueryResult,
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
@@ -11,21 +13,41 @@ import type {
   GetHttpMethod,
   InferResponses,
 } from "../../contract/index.js"
+import type { ContractClientError } from "./ContractClientError.js"
 
-type QueryHook<R extends AppRoute> = <TData = InferResponses<R>>(
+type QueryHookFn<R extends AppRoute> = <TData = InferResponses<R>>(
   args: ClientCallArgs<R>,
   options?: Omit<
-    UseQueryOptions<InferResponses<R>, Error, TData>,
+    UseQueryOptions<InferResponses<R>, ContractClientError, TData>,
     "queryKey" | "queryFn"
   >,
-) => UseQueryResult<TData, Error>
+) => UseQueryResult<TData, ContractClientError>
+
+type InfiniteQueryHook<R extends AppRoute> = (
+  args: ClientCallArgs<R>,
+  options?: Record<string, unknown>,
+) => UseInfiniteQueryResult<
+  InfiniteData<InferResponses<R>>,
+  ContractClientError
+>
+
+type QueryHook<R extends AppRoute> = QueryHookFn<R> &
+  (R extends { infinite: object } ? { infinite: InfiniteQueryHook<R> } : unknown)
 
 type MutationHook<R extends AppRoute> = (
   options?: Omit<
-    UseMutationOptions<InferResponses<R>, Error, ClientCallArgs<R>>,
+    UseMutationOptions<
+      InferResponses<R>,
+      ContractClientError,
+      ClientCallArgs<R>
+    >,
     "mutationFn"
   >,
-) => UseMutationResult<InferResponses<R>, Error, ClientCallArgs<R>>
+) => UseMutationResult<
+  InferResponses<R>,
+  ContractClientError,
+  ClientCallArgs<R>
+>
 
 export type InferQueryHooks<T extends AppRouter> = {
   [K in keyof T]: T[K] extends AppRoute

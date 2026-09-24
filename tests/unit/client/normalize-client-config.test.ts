@@ -103,4 +103,22 @@ describe("normalizeClientConfig", () => {
     expect(config.signal).toBe(signal)
     expect(config.validateRequest).toBe(true)
   })
+
+  it("defaults querySerializer to scalar serializeQuery", () => {
+    const config = normalizeClientConfig({
+      baseUrl: "https://api.example.com",
+    })
+
+    expect(config.querySerializer({ page: 2 })).toBe("?page=2")
+  })
+
+  it("copies a custom querySerializer onto the config", () => {
+    const querySerializer = () => "?custom=1"
+    const config = normalizeClientConfig({
+      baseUrl: "https://api.example.com",
+      querySerializer,
+    })
+
+    expect(config.querySerializer).toBe(querySerializer)
+  })
 })

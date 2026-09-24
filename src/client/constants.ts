@@ -7,4 +7,5 @@ export const JSON_BODY_METHODS: ReadonlySet<HttpMethod> = new Set([
   HTTP_METHOD.POST,
   HTTP_METHOD.PUT,
   HTTP_METHOD.PATCH,
+  HTTP_METHOD.DELETE,
 ])

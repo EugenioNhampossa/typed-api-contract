@@ -4,10 +4,9 @@ import {
   type UseQueryResult,
 } from "@tanstack/react-query"
 import type { ClientCallArgs } from "../client/index.js"
-import { combineAbortSignals } from "../client/combineAbortSignals.js"
 import type { AppRoute, InferResponses } from "../contract/index.js"
-import { buildQueryKey } from "./buildQueryKey.js"
-import { callClientRoute } from "./callClientRoute.js"
+import { createRouteQueryOptions } from "./createRouteQueryOptions.js"
+import type { ContractClientError } from "./types/ContractClientError.js"
 
 export function createQueryHook<R extends AppRoute>(
   client: unknown,
@@ -15,19 +14,18 @@ export function createQueryHook<R extends AppRoute>(
 ): <TData = InferResponses<R>>(
   args: ClientCallArgs<R>,
   options?: Omit<
-    UseQueryOptions<InferResponses<R>, Error, TData>,
+    UseQueryOptions<InferResponses<R>, ContractClientError, TData>,
     "queryKey" | "queryFn"
   >,
-) => UseQueryResult<TData, Error> {
+) => UseQueryResult<TData, ContractClientError> {
+  const getOptions = createRouteQueryOptions<R>(client, routePath)
+
   return function useContractQuery(args, options) {
+    const routeOptions = getOptions(args)
     return useQuery({
       ...options,
-      queryKey: buildQueryKey(routePath, args),
-      queryFn: ({ signal }) =>
-        callClientRoute(client, routePath, {
-          ...args,
-          signal: combineAbortSignals(args.signal, signal),
-        }) as Promise<InferResponses<R>>,
+      queryKey: routeOptions.queryKey,
+      queryFn: routeOptions.queryFn,
     })
   }
 }

@@ -1,4 +1,5 @@
 import type {
+  ClientErrorContext,
   ClientInterceptor,
   ClientRequest,
   ClientResponse,
@@ -15,13 +16,14 @@ export async function runOnError(
   interceptors: readonly ClientInterceptor[],
   request: ClientRequest,
   error: unknown,
+  ctx: ClientErrorContext,
 ): Promise<ClientResponse> {
   for (const interceptor of interceptors) {
     if (interceptor.onError === undefined) {
       continue
     }
 
-    const result = await interceptor.onError(request, error)
+    const result = await interceptor.onError(request, error, ctx)
     if (isClientResponse(result)) {
       return result
     }
