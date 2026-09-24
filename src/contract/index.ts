@@ -1,7 +1,7 @@
 export { initContract } from "./initContract.js"
 export { isAppRoute } from "./isAppRoute.js"
 export { HTTP_METHOD } from "./types/HttpMethod.js"
-export type { AppRoute } from "./types/AppRoute.js"
+export type { AppRoute, InfiniteRouteConfig, RouteContentType } from "./types/AppRoute.js"
 export type { AppRouter } from "./types/AppRouter.js"
 export type { GetHttpMethod, HttpMethod } from "./types/HttpMethod.js"
 export type { InferBody } from "./types/InferBody.js"
@@ -9,3 +9,4 @@ export type { InferClientArgs } from "./types/InferClientArgs.js"
 export type { InferPathParams } from "./types/InferPathParams.js"
 export type { InferQuery } from "./types/InferQuery.js"
 export type { InferResponses } from "./types/InferResponses.js"
+

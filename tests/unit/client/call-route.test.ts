@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest"
 import { z, ZodError } from "zod"
 import { HTTP_METHOD } from "typed-api-contract"
 import { callRoute } from "../../../src/client/callRoute"
+import { serializeQuery } from "../../../src/client/serializeQuery"
 import type { ClientConfig } from "../../../src/client/types/ClientConfig"
 
 const getByIdRoute = {
@@ -13,6 +14,18 @@ const getByIdRoute = {
   },
 }
 
+function createConfig(
+  overrides: Partial<ClientConfig> & Pick<ClientConfig, "fetch">,
+): ClientConfig {
+  return {
+    baseUrl: "https://api.example.com",
+    interceptors: [],
+    validateRequest: false,
+    querySerializer: (query) => serializeQuery(query),
+    ...overrides,
+  }
+}
+
 describe("callRoute", () => {
   it("calls config.fetch with the interpolated URL", async () => {
     const fetch = vi.fn<typeof globalThis.fetch>().mockResolvedValue(
@@ -21,12 +34,7 @@ describe("callRoute", () => {
         headers: { "Content-Type": "application/json" },
       }),
     )
-    const config: ClientConfig = {
-      baseUrl: "https://api.example.com",
-      fetch,
-      interceptors: [],
-      validateRequest: false,
-    }
+    const config = createConfig({ fetch })
 
     const result = await callRoute({
       config,
@@ -49,13 +57,7 @@ describe("callRoute", () => {
     )
 
     await callRoute({
-      config: {
-        baseUrl: "https://api.example.com",
-        fetch,
-        credentials: "include",
-        interceptors: [],
-        validateRequest: false,
-      },
+      config: createConfig({ fetch, credentials: "include" }),
       route: getByIdRoute,
       args: { params: { id: "1" }, signal },
     })
@@ -76,13 +78,7 @@ describe("callRoute", () => {
     )
 
     await callRoute({
-      config: {
-        baseUrl: "https://api.example.com",
-        fetch,
-        interceptors: [],
-        validateRequest: false,
-        signal,
-      },
+      config: createConfig({ fetch, signal }),
       route: getByIdRoute,
       args: { params: { id: "1" } },
     })
@@ -95,12 +91,7 @@ describe("callRoute", () => {
 
     await expect(
       callRoute({
-        config: {
-          baseUrl: "https://api.example.com",
-          fetch,
-          interceptors: [],
-          validateRequest: true,
-        },
+        config: createConfig({ fetch, validateRequest: true }),
         route: getByIdRoute,
         args: { params: { id: 1 } } as never,
       }),

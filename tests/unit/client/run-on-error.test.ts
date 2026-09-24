@@ -3,13 +3,19 @@ import { runOnError } from "../../../src/client/runOnError"
 import { createExampleRequest } from "../../fixtures/client/create-example-request"
 import { createExampleResponse } from "../../fixtures/client/create-example-response"
 
+function createErrorContext(
+  retry = vi.fn(async () => createExampleResponse()),
+) {
+  return { retry }
+}
+
 describe("runOnError", () => {
   it("rethrows the original error when there are no interceptors", async () => {
     const error = new Error("network")
 
-    await expect(runOnError([], createExampleRequest(), error)).rejects.toBe(
-      error,
-    )
+    await expect(
+      runOnError([], createExampleRequest(), error, createErrorContext()),
+    ).rejects.toBe(error)
   })
 
   it("runs onError hooks in array order then rethrows", async () => {
@@ -32,6 +38,7 @@ describe("runOnError", () => {
         ],
         createExampleRequest(),
         error,
+        createErrorContext(),
       ),
     ).rejects.toBe(error)
 
@@ -55,6 +62,7 @@ describe("runOnError", () => {
         ],
         createExampleRequest(),
         original,
+        createErrorContext(),
       ),
     ).rejects.toBe(replacement)
 
@@ -78,6 +86,7 @@ describe("runOnError", () => {
       ],
       createExampleRequest(),
       new Error("network"),
+      createErrorContext(),
     )
 
     expect(result).toBe(recovered)
@@ -102,8 +111,31 @@ describe("runOnError", () => {
       ],
       createExampleRequest(),
       new Error("network"),
+      createErrorContext(),
     )
 
+    expect(result).toBe(recovered)
+  })
+
+  it("passes retry on the error context", async () => {
+    const retry = vi.fn(async () => createExampleResponse())
+    const recovered = createExampleResponse({ body: { ok: true } })
+
+    const result = await runOnError(
+      [
+        {
+          async onError(_request, _error, ctx) {
+            await ctx.retry()
+            return recovered
+          },
+        },
+      ],
+      createExampleRequest(),
+      new Error("network"),
+      { retry },
+    )
+
+    expect(retry).toHaveBeenCalledOnce()
     expect(result).toBe(recovered)
   })
 })

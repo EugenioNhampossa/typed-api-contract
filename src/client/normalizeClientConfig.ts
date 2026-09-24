@@ -1,3 +1,5 @@
+import { isRecord } from "../shared/isRecord.js"
+import { serializeQuery } from "./serializeQuery.js"
 import type { ClientConfig } from "./types/ClientConfig.js"
 import type { InitClientOptions } from "./types/InitClientOptions.js"
 
@@ -16,5 +18,8 @@ export function normalizeClientConfig(options: InitClientOptions): ClientConfig 
     interceptors: options.interceptors ?? [],
     signal: options.signal,
     validateRequest: options.validateRequest ?? false,
+    querySerializer:
+      options.querySerializer ??
+      ((query) => (isRecord(query) ? serializeQuery(query) : "")),
   }
 }

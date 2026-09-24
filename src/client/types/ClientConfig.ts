@@ -1,5 +1,6 @@
 import type { ClientInterceptor } from "./ClientInterceptor.js"
 import type { InitClientOptions } from "./InitClientOptions.js"
+import type { QuerySerializer } from "./QuerySerializer.js"
 
 /**
  * Normalised config threaded through the client tree.
@@ -14,4 +15,5 @@ export interface ClientConfig {
   readonly interceptors: readonly ClientInterceptor[]
   readonly signal?: AbortSignal
   readonly validateRequest: boolean
+  readonly querySerializer: QuerySerializer
 }

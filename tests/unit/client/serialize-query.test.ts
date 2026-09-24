@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest"
 import { serializeQuery } from "../../../src/client/serializeQuery"
+import { serializeQueryBrackets } from "../../../src/client/serializeQueryBrackets"
+import { serializeQueryRepeat } from "../../../src/client/serializeQueryRepeat"
 
 describe("serializeQuery", () => {
   it("returns an empty string when query is missing", () => {
@@ -42,5 +44,30 @@ describe("serializeQuery", () => {
 
   it("skips a query object whose values are all undefined", () => {
     expect(serializeQuery({ page: undefined, sort: undefined })).toBe("")
+  })
+
+  it("stringifies arrays with the default scalar serializer", () => {
+    expect(serializeQuery({ tags: ["a", "b"] })).toBe("?tags=a%2Cb")
+  })
+})
+
+describe("serializeQueryRepeat", () => {
+  it("repeats keys for array values", () => {
+    expect(serializeQueryRepeat({ tags: ["a", "b"], page: 1 })).toBe(
+      "?tags=a&tags=b&page=1",
+    )
+  })
+
+  it("skips undefined values and empty arrays", () => {
+    expect(serializeQueryRepeat({ tags: undefined, page: 1 })).toBe("?page=1")
+    expect(serializeQueryRepeat({ tags: [] })).toBe("")
+  })
+})
+
+describe("serializeQueryBrackets", () => {
+  it("uses bracket keys for array values", () => {
+    expect(serializeQueryBrackets({ tags: ["a", "b"], page: 1 })).toBe(
+      "?tags%5B%5D=a&tags%5B%5D=b&page=1",
+    )
   })
 })

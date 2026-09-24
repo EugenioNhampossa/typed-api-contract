@@ -1,4 +1,5 @@
 import type { ClientInterceptor } from "./ClientInterceptor.js"
+import type { QuerySerializer } from "./QuerySerializer.js"
 
 /**
  * Options passed to `initClient`.
@@ -13,4 +14,10 @@ export interface InitClientOptions {
   interceptors?: readonly ClientInterceptor[]
   signal?: AbortSignal
   validateRequest?: boolean
+  /**
+   * Serializes `query` into a search string (including `?`).
+   * Defaults to scalar `serializeQuery`. Use `serializeQueryRepeat` or
+   * `serializeQueryBrackets` for array filters.
+   */
+  querySerializer?: QuerySerializer
 }

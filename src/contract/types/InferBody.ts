@@ -4,5 +4,7 @@ import type { AppRoute } from "./AppRoute.js"
 export type InferBody<R extends AppRoute> = R extends {
   body: infer Schema extends ZodType
 }
-  ? z.infer<Schema>
+  ? R extends { contentType: "multipart" }
+    ? z.infer<Schema> | FormData
+    : z.infer<Schema>
   : never
