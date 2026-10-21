@@ -47,7 +47,7 @@ try {
 
 ## Falhas Zod
 
-Os corpos das respostas são sempre analisados com o esquema do estado que chegou. Um corpo que não corresponde lança `ZodError` do Zod.
+Os corpos das respostas são analisados com o esquema do estado que chegou só quando [`validateResponse`](./client) é `true`. Um corpo que não corresponde lança `ZodError` do Zod. O predefinido é `false`, por isso um corpo que não corresponde é devolvido como `{ status, body }` com o valor que chegou.
 
 `params`, `query` e `body` do pedido lançam `ZodError` só quando [`validateRequest`](./client) é `true`.
 
@@ -59,7 +59,7 @@ O TanStack Query coloca as falhas em `error`. `ContractClientError` é a união 
 | --- | --- |
 | `UnexpectedStatusError` | O estado não tem esquema na rota |
 | `AuthUnauthorizedError` | A tentativa da [renovação da autenticação](./auth) continua não autorizada |
-| `ZodError` | O corpo da resposta falhou o esquema, ou os argumentos do pedido falharam `validateRequest` |
+| `ZodError` | O corpo da resposta falhou o esquema quando `validateResponse` está activo, ou os argumentos do pedido falharam `validateRequest` |
 | `Error` | Outra falha, por exemplo o `fetch` a rejeitar |
 
 Importe `UnexpectedStatusError` e `AuthUnauthorizedError` de `typed-api-contract/client`. Importe `ZodError` de `zod`. Importe o tipo `ContractClientError` de `typed-api-contract/react-query`.

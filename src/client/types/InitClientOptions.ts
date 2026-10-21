@@ -47,11 +47,19 @@ export interface InitClientOptions {
   /**
    * When `true`, Zod-parses `params`, `query`, and `body` before `fetch`.
    *
-   * Responses are always Zod-parsed, whether or not this is set.
-   *
    * @defaultValue `false`
    */
   validateRequest?: boolean
+
+  /**
+   * When `true`, Zod-parses the response body for the status that came back.
+   *
+   * The body stays typed from the status schema either way. A status with no
+   * schema still throws `UnexpectedStatusError`.
+   *
+   * @defaultValue `false`
+   */
+  validateResponse?: boolean
 
   /**
    * Serializes `query` into a search string, including the leading `?`.

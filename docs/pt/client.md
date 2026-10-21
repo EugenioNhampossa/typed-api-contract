@@ -1,6 +1,6 @@
 ---
 title: Cliente
-description: Configure initClient, cabeçalhos e cancelamento por chamada, validação do pedido e serialização da query.
+description: Configure initClient, cabeçalhos e cancelamento por chamada, validação e serialização da query.
 ---
 
 # Cliente
@@ -21,6 +21,7 @@ const postsClient = initClient(postsContract, {
   credentials: "include",
   signal: pageAbort.signal,
   validateRequest: true,
+  validateResponse: true,
   querySerializer: serializeQueryRepeat,
   interceptors: [authInterceptor],
 })
@@ -38,6 +39,7 @@ const postsClient = initClient(postsContract, {
 | `credentials` | nenhum | Encaminhado como `RequestInit.credentials` |
 | `signal` | nenhum | Cancela todos os pedidos. Combinado com um `signal` da chamada quando ambos existem |
 | `validateRequest` | `false` | Analisa `params`, `query` e `body` com Zod antes do `fetch` |
+| `validateResponse` | `false` | Analisa o corpo da resposta com Zod para o estado que chegou |
 | `querySerializer` | `serializeQuery` | Transforma `query` numa string que começa com `?` |
 | `interceptors` | `[]` | `onRequest`, `onResponse` e `onError` à volta de cada chamada |
 
@@ -67,10 +69,18 @@ Os valores do caminho passam por `encodeURIComponent`. `id: "a/b"` fica `/posts/
 ## Validação do pedido
 
 ::: warning
-`validateRequest` vem predefinido como `false`. `params`, `query` e `body` do pedido continuam tipados. Só são verificados com Zod quando opta por isso. Os corpos das respostas são sempre analisados, esteja ou não esta opção activa.
+`validateRequest` vem predefinido como `false`. `params`, `query` e `body` do pedido continuam tipados. Só são verificados com Zod quando opta por isso.
 :::
 
 Uma análise de pedido falhada lança `ZodError` antes do `fetch`.
+
+## Validação da resposta
+
+::: warning
+`validateResponse` vem predefinido como `false`. O corpo da resposta continua tipado pelo esquema do estado. Só é verificado com Zod quando opta por isso.
+:::
+
+Uma análise de resposta falhada lança `ZodError`. Um estado sem esquema lança `UnexpectedStatusError` em qualquer dos casos.
 
 ## Serializadores da query
 

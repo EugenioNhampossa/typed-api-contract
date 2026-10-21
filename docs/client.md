@@ -1,6 +1,6 @@
 ---
 title: Client
-description: Configure initClient, per-call headers and abort, request validation, and query serializers.
+description: Configure initClient, per-call headers and abort, validation, and query serializers.
 ---
 
 # Client
@@ -21,6 +21,7 @@ const postsClient = initClient(postsContract, {
   credentials: "include",
   signal: pageAbort.signal,
   validateRequest: true,
+  validateResponse: true,
   querySerializer: serializeQueryRepeat,
   interceptors: [authInterceptor],
 })
@@ -38,6 +39,7 @@ const postsClient = initClient(postsContract, {
 | `credentials` | none | Forwarded as `RequestInit.credentials` |
 | `signal` | none | Aborts every request. Combined with a per-call `signal` when both are set |
 | `validateRequest` | `false` | Zod-parse `params`, `query`, and `body` before `fetch` |
+| `validateResponse` | `false` | Zod-parse the response body for the status that came back |
 | `querySerializer` | `serializeQuery` | Turns `query` into a string that starts with `?` |
 | `interceptors` | `[]` | `onRequest`, `onResponse`, and `onError` around each call |
 
@@ -67,10 +69,18 @@ Path values are passed through `encodeURIComponent`. `id: "a/b"` becomes `/posts
 ## Request validation
 
 ::: warning
-`validateRequest` defaults to `false`. Request `params`, `query`, and `body` are still typed. They are checked with Zod only when you opt in. Response bodies are always parsed, whether or not this flag is set.
+`validateRequest` defaults to `false`. Request `params`, `query`, and `body` are still typed. They are checked with Zod only when you opt in.
 :::
 
 A failed request parse throws `ZodError` before `fetch`.
+
+## Response validation
+
+::: warning
+`validateResponse` defaults to `false`. The response body is still typed from the status schema. It is checked with Zod only when you opt in.
+:::
+
+A failed response parse throws `ZodError`. A status with no schema throws `UnexpectedStatusError` either way.
 
 ## Query serializers
 

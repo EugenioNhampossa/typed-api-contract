@@ -44,7 +44,7 @@ Passe o mesmo contrato ao cliente e aos hooks. As chaves coincidem: `posts.getBy
 
 ## Predefinições
 
-- Os corpos das respostas são sempre analisados com o esquema Zod desse estado.
+- Os corpos das respostas são tipados pelo esquema desse estado. Só são analisados em tempo de execução quando `validateResponse` é `true`. O predefinido é `false`.
 - `params`, `query` e `body` são tipados. Só são analisados em tempo de execução quando `validateRequest` é `true`. O predefinido é `false`.
 - Um estado declarado, incluindo 4xx e 5xx, são dados com a forma `{ status, body }`.
 - Um estado sem esquema lança [`UnexpectedStatusError`](./responses).

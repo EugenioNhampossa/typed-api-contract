@@ -44,7 +44,7 @@ Pass the same contract to the client and to the hooks. The keys match: `posts.ge
 
 ## Defaults
 
-- Response bodies are always parsed with the Zod schema for that status.
+- Response bodies are typed from the status schema. They are parsed at runtime only when `validateResponse` is `true`. The default is `false`.
 - `params`, `query`, and `body` are typed. They are parsed at runtime only when `validateRequest` is `true`. The default is `false`.
 - A declared status, including 4xx and 5xx, is data shaped as `{ status, body }`.
 - A status with no schema throws [`UnexpectedStatusError`](./responses).

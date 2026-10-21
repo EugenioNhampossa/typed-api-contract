@@ -21,6 +21,7 @@ function createConfig(
     baseUrl: "https://api.example.com",
     interceptors: [],
     validateRequest: false,
+    validateResponse: false,
     querySerializer: (query) => serializeQuery(query),
     ...overrides,
   }
@@ -98,5 +99,39 @@ describe("callRoute", () => {
     ).rejects.toThrow(ZodError)
 
     expect(fetch).not.toHaveBeenCalled()
+  })
+
+  it("returns the raw body when validateResponse is false", async () => {
+    const fetch = vi.fn<typeof globalThis.fetch>().mockResolvedValue(
+      new Response(JSON.stringify({ id: 1 }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }),
+    )
+
+    const result = await callRoute({
+      config: createConfig({ fetch }),
+      route: getByIdRoute,
+      args: { params: { id: "1" } },
+    })
+
+    expect(result).toEqual({ status: 200, body: { id: 1 } })
+  })
+
+  it("throws ZodError when validateResponse is true and the body does not match", async () => {
+    const fetch = vi.fn<typeof globalThis.fetch>().mockResolvedValue(
+      new Response(JSON.stringify({ id: 1 }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }),
+    )
+
+    await expect(
+      callRoute({
+        config: createConfig({ fetch, validateResponse: true }),
+        route: getByIdRoute,
+        args: { params: { id: "1" } },
+      }),
+    ).rejects.toThrow(ZodError)
   })
 })

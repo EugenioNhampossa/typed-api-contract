@@ -2,7 +2,7 @@
 
 Typed REST contracts, a `fetch` client, and TanStack Query hooks inferred from Zod route definitions.
 
-Full guide, in English and Portuguese: <https://eugenionhampossa.github.io/typed-api-contract/>
+Full guide, in : <https://eugenionhampossa.github.io/typed-api-contract/>
 
 ## Install
 

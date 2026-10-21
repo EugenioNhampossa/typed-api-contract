@@ -39,7 +39,6 @@ export async function callRoute<R extends AppRoute>({
   if (config.validateRequest) {
     validateRequestArgs(route, args)
   }
-  const interceptedRequest = await runOnRequest(config.interceptors, request)
 
   const path = buildPath(route.path, getRecordValue(args, "params"))
   const query = getRecordValue(args, "query")
@@ -68,7 +67,7 @@ export async function callRoute<R extends AppRoute>({
   }
 
   const response = await executeWithInterceptors(config, initialRequest, true)
-  return parseRouteResponse(route, response)
+  return parseRouteResponse(route, response, config.validateResponse)
 }
 
 async function executeWithInterceptors(

@@ -84,24 +84,27 @@ describe("normalizeClientConfig", () => {
     expect(config.interceptors).toBe(interceptors)
   })
 
-  it("defaults validateRequest to false", () => {
+  it("defaults validateRequest and validateResponse to false", () => {
     const config = normalizeClientConfig({
       baseUrl: "https://api.example.com",
     })
 
     expect(config.validateRequest).toBe(false)
+    expect(config.validateResponse).toBe(false)
   })
 
-  it("copies signal and validateRequest onto the config", () => {
+  it("copies signal and validation flags onto the config", () => {
     const signal = new AbortController().signal
     const config = normalizeClientConfig({
       baseUrl: "https://api.example.com",
       signal,
       validateRequest: true,
+      validateResponse: true,
     })
 
     expect(config.signal).toBe(signal)
     expect(config.validateRequest).toBe(true)
+    expect(config.validateResponse).toBe(true)
   })
 
   it("defaults querySerializer to scalar serializeQuery", () => {

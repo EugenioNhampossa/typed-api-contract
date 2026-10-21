@@ -15,5 +15,6 @@ export interface ClientConfig {
   readonly interceptors: readonly ClientInterceptor[]
   readonly signal?: AbortSignal
   readonly validateRequest: boolean
+  readonly validateResponse: boolean
   readonly querySerializer: QuerySerializer
 }

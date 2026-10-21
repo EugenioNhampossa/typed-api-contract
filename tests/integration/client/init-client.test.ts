@@ -36,7 +36,27 @@ describe("initClient", () => {
     }
   })
 
-  it("throws ZodError when the 200 body does not match the schema", async () => {
+  it("returns the raw body when validateResponse is not set", async () => {
+    mswServer.use(
+      http.get(`${POSTS_API_BASE_URL}/posts/:id`, () =>
+        HttpResponse.json({ id: 1, title: "Hello", body: "World" }),
+      ),
+    )
+
+    const res = await client.posts.getById({ params: { id: "bad" } })
+
+    expect(res.status).toBe(200)
+    if (res.status === 200) {
+      expect(res.body).toEqual({ id: 1, title: "Hello", body: "World" })
+    }
+  })
+
+  it("throws ZodError when validateResponse is true and the body does not match", async () => {
+    const validatingClient = initClient(contract, {
+      baseUrl: POSTS_API_BASE_URL,
+      validateResponse: true,
+    })
+
     mswServer.use(
       http.get(`${POSTS_API_BASE_URL}/posts/:id`, () =>
         HttpResponse.json({ id: 1, title: "Hello", body: "World" }),
@@ -44,7 +64,7 @@ describe("initClient", () => {
     )
 
     await expect(
-      client.posts.getById({ params: { id: "bad" } }),
+      validatingClient.posts.getById({ params: { id: "bad" } }),
     ).rejects.toBeInstanceOf(ZodError)
   })
 

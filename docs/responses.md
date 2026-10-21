@@ -47,7 +47,7 @@ try {
 
 ## Zod failures
 
-Response bodies are always parsed with the schema for the status that came back. A body that does not match throws `ZodError` from Zod.
+Response bodies are parsed with the schema for the status that came back only when [`validateResponse`](./client) is `true`. A body that does not match throws `ZodError` from Zod. The default is `false`, so a mismatched body is returned as `{ status, body }` with the value that arrived.
 
 Request `params`, `query`, and `body` throw `ZodError` only when [`validateRequest`](./client) is `true`.
 
@@ -59,7 +59,7 @@ TanStack Query puts failures on `error`. `ContractClientError` is the union thos
 | --- | --- |
 | `UnexpectedStatusError` | The status has no schema on the route |
 | `AuthUnauthorizedError` | The [auth refresh](./auth) retry is still unauthorized |
-| `ZodError` | The response body failed its schema, or request args failed `validateRequest` |
+| `ZodError` | The response body failed its schema when `validateResponse` is set, or request args failed `validateRequest` |
 | `Error` | Another failure, such as `fetch` rejecting |
 
 Import `UnexpectedStatusError` and `AuthUnauthorizedError` from `typed-api-contract/client`. Import `ZodError` from `zod`. Import the `ContractClientError` type from `typed-api-contract/react-query`.

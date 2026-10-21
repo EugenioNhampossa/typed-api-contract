@@ -12,7 +12,7 @@ import type { InitClientOptions } from "./types/InitClientOptions.js"
  * @returns Nested callers matching `contract`. See {@link InferClient}.
  *
  * @throws {UnexpectedStatusError} When a route caller receives a status that has no response schema.
- * @throws {ZodError} When a response body fails its schema, or when `validateRequest` is set and `params`, `query`, or `body` fail theirs.
+ * @throws {ZodError} When `validateResponse` is set and a response body fails its schema, or when `validateRequest` is set and `params`, `query`, or `body` fail theirs.
  *
  * @remarks
  * Those errors are thrown by the route caller, not by `initClient` itself.
