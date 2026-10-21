@@ -5,6 +5,9 @@ hero:
   name: typed-api-contract
   text: Typed REST contracts
   tagline: Zod routes, a typed fetch client, and TanStack Query hooks.
+  image:
+    src: /logo.png
+    alt: typed-api-contract
   actions:
     - theme: brand
       text: Quickstart

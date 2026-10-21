@@ -9,7 +9,11 @@ export default defineConfig({
   description:
     "Typed REST contracts, a fetch client, and TanStack Query hooks.",
   base,
+  head: [
+    ["link", { rel: "icon", type: "image/png", href: "/logo.png" }],
+  ],
   themeConfig: {
+    logo: "/logo.png",
     search: {
       provider: "local",
       options: {

@@ -5,6 +5,9 @@ hero:
   name: typed-api-contract
   text: Contratos REST tipados
   tagline: Rotas Zod, um cliente fetch tipado e hooks do TanStack Query.
+  image:
+    src: /logo.png
+    alt: typed-api-contract
   actions:
     - theme: brand
       text: Primeiros passos

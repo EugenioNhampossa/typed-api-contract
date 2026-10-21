@@ -81,6 +81,7 @@
   --vp-c-caution-3: var(--vp-c-danger-3);
   --vp-c-caution-soft: var(--vp-c-danger-soft);
 
+  --vp-nav-logo-height: 32px;
   --vp-nav-bg-color: var(--background);
   --vp-sidebar-bg-color: var(--sidebar);
   --vp-local-nav-bg-color: var(--background);
@@ -125,11 +126,9 @@
   --vp-local-search-highlight-text: var(--background);
 
   --vp-home-hero-name-color: transparent;
-  --vp-home-hero-name-background: linear-gradient(
-    120deg,
-    var(--chart-5),
-    var(--chart-4)
-  );
+  --vp-home-hero-name-background: linear-gradient(120deg,
+      var(--chart-5),
+      var(--chart-4));
 
   --vp-custom-block-warning-border: var(--chart-4);
   --vp-custom-block-warning-code-bg: color-mix(in oklch, var(--chart-5) 12%, var(--background));
@@ -194,11 +193,18 @@
   --vp-local-search-highlight-text: var(--primary-foreground);
   --vp-local-search-result-selected-border: var(--primary);
 
-  --vp-home-hero-name-background: linear-gradient(
-    120deg,
-    var(--primary),
-    var(--chart-1)
-  );
+  --vp-home-hero-name-background: linear-gradient(120deg,
+      var(--primary),
+      var(--chart-1));
+}
+
+.VPNavBarTitle .logo {
+  border-radius: 8px;
+}
+
+.VPHero .image-src {
+  border-radius: var(--radius);
+  max-width: 220px;
 }
 
 .vp-doc div[class*="language-"],

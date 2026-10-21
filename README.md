@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/public/logo.png" alt="typed-api-contract" width="120" />
+</p>
+
 # typed-api-contract
 
 Typed REST contracts, a `fetch` client, and TanStack Query hooks inferred from Zod route definitions.
