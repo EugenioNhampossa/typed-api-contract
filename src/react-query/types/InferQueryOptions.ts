@@ -56,6 +56,12 @@ type QueryOptionsNode<R extends AppRoute> = QueryOptionsFactory<R> &
     ? { infinite: InfiniteOptionsFactory<R> }
     : unknown)
 
+/**
+ * Options-factory tree matching a router.
+ *
+ * GET routes are `useQuery` option factories, plus `.infinite` when the route sets `infinite`.
+ * Every other method is a `useMutation` options factory.
+ */
 export type InferQueryOptions<T extends AppRouter> = {
   [K in keyof T]: T[K] extends AppRoute
     ? T[K]["method"] extends GetHttpMethod

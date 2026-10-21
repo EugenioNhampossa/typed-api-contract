@@ -10,7 +10,11 @@ function isHttpMethod(value: unknown): value is HttpMethod {
 }
 
 /**
- * Returns true when `value` looks like an `AppRoute` leaf (method, path, responses).
+ * Returns true when `value` looks like an {@link AppRoute} leaf (method, path, responses).
+ *
+ * @remarks
+ * This is a structural check of `method`, `path`, and `responses`.
+ * It does not Zod-parse the route or inspect `pathParams`, `query`, or `body`.
  */
 export function isAppRoute(value: unknown): value is AppRoute {
   if (typeof value !== "object" || value === null) {

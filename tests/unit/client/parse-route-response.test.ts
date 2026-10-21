@@ -22,6 +22,7 @@ describe("parseRouteResponse", () => {
         status: 200,
         body: { id: "1" },
       }),
+      true,
     )
 
     expect(result).toEqual({ status: 200, body: { id: "1" } })
@@ -32,17 +33,31 @@ describe("parseRouteResponse", () => {
       parseRouteResponse(
         getByIdRoute,
         createExampleResponse({ status: 500, body: { message: "error" } }),
+        false,
       ),
     ).toThrow(UnexpectedStatusError)
   })
 
-  it("throws ZodError when the body does not match the schema", () => {
+  it("throws ZodError when validation is on and the body does not match", () => {
     expect(() =>
       parseRouteResponse(
         getByIdRoute,
         createExampleResponse({ status: 200, body: { id: 1 } }),
+        true,
       ),
     ).toThrow(ZodError)
+  })
+
+  it("returns the raw body when validation is off", () => {
+    const body = { id: 1, extra: "kept" }
+
+    const result = parseRouteResponse(
+      getByIdRoute,
+      createExampleResponse({ status: 200, body }),
+      false,
+    )
+
+    expect(result).toEqual({ status: 200, body })
   })
 
   it("accepts an empty body when the schema is z.undefined()", () => {
@@ -56,6 +71,7 @@ describe("parseRouteResponse", () => {
     const result = parseRouteResponse(
       route,
       createExampleResponse({ status: 204, body: undefined }),
+      true,
     )
 
     expect(result).toEqual({ status: 204, body: undefined })
@@ -72,6 +88,7 @@ describe("parseRouteResponse", () => {
     const result = parseRouteResponse(
       route,
       createExampleResponse({ status: 204, body: undefined }),
+      true,
     )
 
     expect(result.status).toBe(204)

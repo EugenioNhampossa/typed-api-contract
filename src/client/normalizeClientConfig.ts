@@ -18,6 +18,7 @@ export function normalizeClientConfig(options: InitClientOptions): ClientConfig 
     interceptors: options.interceptors ?? [],
     signal: options.signal,
     validateRequest: options.validateRequest ?? false,
+    validateResponse: options.validateResponse ?? false,
     querySerializer:
       options.querySerializer ??
       ((query) => (isRecord(query) ? serializeQuery(query) : "")),

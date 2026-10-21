@@ -211,6 +211,7 @@ describe("initClient interceptors", () => {
     }))
     const client = initClient(contract, {
       baseUrl: POSTS_API_BASE_URL,
+      validateResponse: true,
       fetch: async () => {
         throw new TypeError("network")
       },

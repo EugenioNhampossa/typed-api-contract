@@ -4,11 +4,15 @@ import { isZodSchema } from "./isZodSchema.js"
 import type { ClientResponse } from "./types/ClientInterceptor.js"
 
 /**
- * Validates a mapped (or recovered) response against the route's declared statuses.
+ * Maps a response onto the route's declared statuses.
+ *
+ * When `validateResponse` is true, the body is parsed with that status schema.
+ * A status with no schema throws {@link UnexpectedStatusError} either way.
  */
 export function parseRouteResponse<R extends AppRoute>(
   route: R,
   response: ClientResponse,
+  validateResponse: boolean,
 ): InferResponses<R> {
   const schema: unknown = route.responses[response.status]
   if (!isZodSchema(schema)) {
@@ -19,9 +23,9 @@ export function parseRouteResponse<R extends AppRoute>(
     })
   }
 
-  const parsedBody = schema.parse(response.body)
+  const body = validateResponse ? schema.parse(response.body) : response.body
   return {
     status: response.status,
-    body: parsedBody,
+    body,
   } as InferResponses<R>
 }

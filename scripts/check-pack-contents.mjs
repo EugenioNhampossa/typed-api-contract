@@ -5,6 +5,7 @@ const FORBIDDEN_PATH_PREFIXES = [
   "src/",
   "tests/",
   "scripts/",
+  "docs/",
   ".github/",
   "node_modules/",
   ".env",

@@ -7,4 +7,5 @@ coverage
 .turbo
 .vscode
 .idea
-docs
+docs/.vitepress/dist
+docs/.vitepress/cache

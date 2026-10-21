@@ -67,7 +67,7 @@ export async function callRoute<R extends AppRoute>({
   }
 
   const response = await executeWithInterceptors(config, initialRequest, true)
-  return parseRouteResponse(route, response)
+  return parseRouteResponse(route, response, config.validateResponse)
 }
 
 async function executeWithInterceptors(
