@@ -49,6 +49,12 @@ type MutationHook<R extends AppRoute> = (
   ClientCallArgs<R>
 >
 
+/**
+ * Hook tree matching a router.
+ *
+ * GET routes are `useQuery` hooks, plus `.infinite` when the route sets `infinite`.
+ * Every other method is a `useMutation` hook.
+ */
 export type InferQueryHooks<T extends AppRouter> = {
   [K in keyof T]: T[K] extends AppRoute
     ? T[K]["method"] extends GetHttpMethod

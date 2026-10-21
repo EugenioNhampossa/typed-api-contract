@@ -3,21 +3,62 @@ import type { QuerySerializer } from "./QuerySerializer.js"
 
 /**
  * Options passed to `initClient`.
- *
- * `baseUrl` is the API origin with no trailing slash, e.g. `https://api.example.com`.
  */
 export interface InitClientOptions {
-  baseUrl: string
-  headers?: HeadersInit | (() => HeadersInit | Promise<HeadersInit>)
-  fetch?: typeof fetch
-  credentials?: RequestCredentials
-  interceptors?: readonly ClientInterceptor[]
-  signal?: AbortSignal
-  validateRequest?: boolean
   /**
-   * Serializes `query` into a search string (including `?`).
-   * Defaults to scalar `serializeQuery`. Use `serializeQueryRepeat` or
-   * `serializeQueryBrackets` for array filters.
+   * API origin with no trailing slash, for example `https://api.example.com`.
+   */
+  baseUrl: string
+
+  /**
+   * Static headers, or a thunk (sync or async) resolved on every request.
+   *
+   * Merge order, later wins: JSON `Content-Type` when a JSON body is sent,
+   * these headers, per-call `headers`, then `onRequest` mutations.
+   * Multipart bodies never set `Content-Type`.
+   */
+  headers?: HeadersInit | (() => HeadersInit | Promise<HeadersInit>)
+
+  /**
+   * Custom `fetch` implementation.
+   *
+   * @defaultValue `globalThis.fetch`, read at call time
+   */
+  fetch?: typeof fetch
+
+  /** Forwarded to `fetch` as `RequestInit.credentials`. */
+  credentials?: RequestCredentials
+
+  /**
+   * `onRequest` / `onResponse` / `onError` hooks around each call.
+   *
+   * @defaultValue `[]`
+   * @see {@link ClientInterceptor}
+   */
+  interceptors?: readonly ClientInterceptor[]
+
+  /**
+   * Aborts every request.
+   *
+   * Combined with a per-call `signal` when both are set.
+   */
+  signal?: AbortSignal
+
+  /**
+   * When `true`, Zod-parses `params`, `query`, and `body` before `fetch`.
+   *
+   * Responses are always Zod-parsed, whether or not this is set.
+   *
+   * @defaultValue `false`
+   */
+  validateRequest?: boolean
+
+  /**
+   * Serializes `query` into a search string, including the leading `?`.
+   *
+   * @defaultValue {@link serializeQuery}
+   * @see {@link serializeQueryRepeat}
+   * @see {@link serializeQueryBrackets}
    */
   querySerializer?: QuerySerializer
 }
