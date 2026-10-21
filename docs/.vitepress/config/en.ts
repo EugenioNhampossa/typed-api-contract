@@ -19,6 +19,7 @@ export const en = {
           { text: "Install", link: "/install" },
           { text: "Quickstart", link: "/quickstart" },
           { text: "Contract", link: "/contract" },
+          { text: "Structure", link: "/structure" },
           { text: "Client", link: "/client" },
           { text: "Responses and errors", link: "/responses" },
           { text: "React Query", link: "/react-query" },
@@ -26,6 +27,17 @@ export const en = {
           { text: "Interceptors", link: "/interceptors" },
           { text: "Auth refresh", link: "/auth" },
           { text: "Multipart", link: "/multipart" },
+        ],
+      },
+      {
+        text: "Recipes",
+        items: [
+          { text: "Optimistic updates", link: "/recipes/optimistic-updates" },
+          {
+            text: "Update the cache from a mutation",
+            link: "/recipes/update-from-mutation",
+          },
+          { text: "Server rendering", link: "/recipes/server-rendering" },
         ],
       },
       {

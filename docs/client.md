@@ -27,7 +27,7 @@ const postsClient = initClient(postsContract, {
 })
 ```
 
-`postsContract` is the router from [Contract](./contract). `customFetch` has the same signature as `fetch`. `authInterceptor` is a `ClientInterceptor`. See [Interceptors](./interceptors).
+`postsContract` is the router from [Contract](./contract). Every route in that tree shares the options below. How many clients to create is covered in [Structure](./structure). `customFetch` has the same signature as `fetch`. `authInterceptor` is a `ClientInterceptor`. See [Interceptors](./interceptors).
 
 ## Options
 

@@ -19,6 +19,7 @@ export const pt = {
           { text: "Instalação", link: "/pt/install" },
           { text: "Primeiros passos", link: "/pt/quickstart" },
           { text: "Contrato", link: "/pt/contract" },
+          { text: "Estrutura", link: "/pt/structure" },
           { text: "Cliente", link: "/pt/client" },
           { text: "Respostas e erros", link: "/pt/responses" },
           { text: "React Query", link: "/pt/react-query" },
@@ -26,6 +27,23 @@ export const pt = {
           { text: "Interceptores", link: "/pt/interceptors" },
           { text: "Renovação da autenticação", link: "/pt/auth" },
           { text: "Carregamento de ficheiros", link: "/pt/multipart" },
+        ],
+      },
+      {
+        text: "Receitas",
+        items: [
+          {
+            text: "Actualizações optimistas",
+            link: "/pt/recipes/optimistic-updates",
+          },
+          {
+            text: "Actualizar a cache a partir de uma mutation",
+            link: "/pt/recipes/update-from-mutation",
+          },
+          {
+            text: "Renderização no servidor",
+            link: "/pt/recipes/server-rendering",
+          },
         ],
       },
       {

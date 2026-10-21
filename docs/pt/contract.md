@@ -7,7 +7,7 @@ description: Aninhe rotas e declare parâmetros de caminho, query, corpo e um es
 
 Depois desta página consegue descrever um router aninhado cujos parâmetros de caminho, query, corpo e respostas estão todos tipados.
 
-`initContract().router(...)` confirma que o valor é um `AppRouter` e conserva as chaves literais. Um valor é uma rota ou outro router, por isso os grupos podem aninhar-se.
+`initContract().router(...)` confirma que o valor é um `AppRouter` e conserva as chaves literais. Um valor é uma rota ou outro router, por isso os grupos podem aninhar-se. Para dividir essa árvore num ficheiro por controlador, veja [Estrutura](./structure).
 
 ```ts
 import { HTTP_METHOD, initContract } from "typed-api-contract"
@@ -92,4 +92,4 @@ O `Error` lançado indica o método, o caminho e as chaves que não coincidem. A
 
 A concepção do contrato é esta: uma descrição, e o cliente segue-a sem uma segunda lista de rotas.
 
-Seguinte: [Cliente](./client).
+Seguinte: [Estrutura](./structure).

@@ -7,7 +7,7 @@ description: Nest routes and declare path params, query, body, and a Zod schema 
 
 After this page you can describe a nested router whose path placeholders, query, body, and responses are all typed.
 
-`initContract().router(...)` checks that the value is an `AppRouter` and keeps the literal keys. A value is either a route or another router, so groups can nest.
+`initContract().router(...)` checks that the value is an `AppRouter` and keeps the literal keys. A value is either a route or another router, so groups can nest. To split that tree into one file per controller, see [Structure](./structure).
 
 ```ts
 import { HTTP_METHOD, initContract } from "typed-api-contract"
@@ -90,4 +90,4 @@ pathParams: z.object({ id: z.string() })
 
 The thrown `Error` names the method, the path, and the keys that disagree. The check runs when the client is created, not on each call.
 
-Next: [Client](./client).
+Next: [Structure](./structure).
