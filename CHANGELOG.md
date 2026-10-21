@@ -4,6 +4,8 @@ All notable changes to this project are documented in this file.
 
 ## Unreleased
 
+## 0.4.0
+
 ### Changed
 
 - Response bodies are Zod-parsed only when `validateResponse` is `true`. The default is `false`, matching `validateRequest`. A status missing from `responses` still throws `UnexpectedStatusError`.
